@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct mac_appApp: App {
     var body: some Scene {
-        MenuBarExtra("mac-app", systemImage: "desktopcomputer") {
+        MenuBarExtra("Wallora", image: "MenuBarIcon") {
             ContentView()
         }
         .menuBarExtraStyle(.window) // Creates a popover-style menu

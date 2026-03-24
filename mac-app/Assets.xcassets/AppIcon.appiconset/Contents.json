@@ -1,55 +1,55 @@
 {
   "images" : [
     {
-      "filename" : "MenuBarIcon.png",
+      "filename" : "ZenShot Wallora 16.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "16x16"
     },
     {
-      "filename" : "MenuBarIcon@2x.png",
+      "filename" : "ZenShot Wallora.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "16x16"
     },
     {
-      "filename" : "MenuBarIcon@2x 1.png",
+      "filename" : "ZenShot Wallora 1.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "32x32"
     },
     {
-      "filename" : "MenuBarIcon@3x.png",
+      "filename" : "ZenShot Wallora 64.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "32x32"
     },
     {
-      "filename" : "MenuBarIcon@4x.png",
+      "filename" : "ZenShot Wallora 128.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "128x128"
     },
     {
-      "filename" : "MenuBarIcon@5x.png",
+      "filename" : "ZenShot Wallora 512 (1) 1.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "128x128"
     },
     {
-      "filename" : "MenuBarIcon@5x 1.png",
+      "filename" : "ZenShot Wallora 512 (1).png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "256x256"
     },
     {
-      "filename" : "MenuBarIcon@6x.png",
+      "filename" : "ZenShot Wallora 512.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "256x256"
     },
     {
-      "filename" : "MenuBarIcon@6x 1.png",
+      "filename" : "ZenShot Wallora 513.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "512x512"
