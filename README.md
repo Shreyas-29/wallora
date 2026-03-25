@@ -1,42 +1,29 @@
-# Wallora 🖥️
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/9ce8e054-f44a-49da-8f02-a9b36234d8fc" alt="Wallora Logo" width="50"/>
+  <h1>Wallora</h1>
+  <p>A minimalist macOS menu bar app for live video desktop wallpapers.</p>
+</div>
 
-> A lightweight macOS menu bar app that brings your desktop to life by setting any video as your live wallpaper.
+## ✨ Features
+- **Live Backgrounds**: Set any `.mp4` or `.mov` as your wallpaper.
+- **Multi-Monitor**: Loops seamlessly across all your displays.
+- **Minimal UI**: Clean, native Mac menu bar interface.
+- **Efficient**: Silent playback (auto-muted) using `AVFoundation`.
 
-![macOS Support](https://img.shields.io/badge/macOS-13.0+-blue?style=for-the-badge&logo=apple)
-![SwiftUI](https://img.shields.io/badge/SwiftUI-native-orange?style=for-the-badge&logo=swift)
-
-## Features ✨
-
-- **Live Video Wallpapers:** Set any `.mp4`, `.mov`, or QuickTime video as your desktop background to create a dynamic workspace.
-- **Multi-Monitor Support:** Automatically detects your displays and seamlessly loops the video across every connected screen.
-- **Clean & Minimal UI:** Designed natively for macOS featuring a sleek, black-and-white menu bar interface that stays completely out of your way.
-- **Resource Friendly:** Videos are automatically muted and looped efficiently using `AVFoundation`, preventing display sleep interruption and preserving battery.
-
-## Getting Started 🚀
-
-### Prerequisites
-- macOS 13.0 or later
-- Xcode 15 or later (if building from source)
-
-### Installation
+## 🚀 Getting Started
 1. Clone the repository:
    ```bash
    git clone https://github.com/Shreyas-29/wallora.git
    ```
-2. Open `mac-app.xcodeproj` in Xcode.
-3. Select your Mac as the build destination and press `Cmd + R` to run.
-4. Wallora will appear as a small display icon in your Mac's top menu bar.
+2. Open `mac-app.xcodeproj` in Xcode 15+.
+3. Select your Mac as the build destination and press `Cmd + R`.
 
-## Usage 💡
-1. Click the **Wallora icon** in the top-right menu bar.
-2. Click **Upload Video** (or the folder icon) and select a video file from your Mac.
-3. Click **Apply Wallpaper** and watch your desktop come to life!
-4. You can pause the wallpaper at any time by clicking **Stop Wallpaper** or quit entirely via the `...` settings menu.
+## 💡 Usage
+1. Click the menu bar icon.
+2. Select an MP4 video file.
+3. Click "Apply Wallpaper".
 
-## Tech Stack 🛠️
-- **SwiftUI** for the user interface and menu bar integration (`MenuBarExtra`).
-- **AppKit** for positioning the borderless window at the desktop level (`NSWindow.Level.desktopWindow`).
-- **AVFoundation** (`AVQueuePlayer`, `AVPlayerLooper`, `AVPlayerLayer`) for highly efficient, seamless video looping.
-
----
-*Built with ❤️ for macOS.*
+## 🛠️ Tech Stack
+- **SwiftUI**: Menu bar UI (`MenuBarExtra`).
+- **AppKit**: Borderless background windows.
+- **AVFoundation**: Hardware-accelerated video looping.
