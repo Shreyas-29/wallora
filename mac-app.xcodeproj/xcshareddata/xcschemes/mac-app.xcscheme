@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "DBB727A42EE866A1004562E2"
-               BuildableName = "mac-app.app"
+               BuildableName = "Wallora.app"
                BlueprintName = "mac-app"
                ReferencedContainer = "container:mac-app.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "DBB727A42EE866A1004562E2"
-            BuildableName = "mac-app.app"
+            BuildableName = "Wallora.app"
             BlueprintName = "mac-app"
             ReferencedContainer = "container:mac-app.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "DBB727A42EE866A1004562E2"
-            BuildableName = "mac-app.app"
+            BuildableName = "Wallora.app"
             BlueprintName = "mac-app"
             ReferencedContainer = "container:mac-app.xcodeproj">
          </BuildableReference>

@@ -3,114 +3,166 @@ import UniformTypeIdentifiers
 
 struct ContentView: View {
     @StateObject private var wallpaperManager = WallpaperManager.shared
-    
+
     var body: some View {
-        VStack(spacing: 16) {
-            // Header
+        VStack(spacing: 0) {
+
+            // MARK: - Header
             HStack {
-                Image(systemName: "desktopcomputer")
-                    .font(.title2)
-                    .foregroundStyle(.white)
-                Text("Video Wallpaper")
-                    .font(.headline)
-                    .fontWeight(.semibold)
+                Text("Wallora")
+                    .font(.system(size: 14, weight: .semibold))
+
                 Spacer()
-                
-                // Status Indicator
-                Circle()
-                    .fill(wallpaperManager.isWallpaperActive ? Color.green : Color.gray)
-                    .frame(width: 8, height: 8)
-                    .shadow(color: wallpaperManager.isWallpaperActive ? .green.opacity(0.8) : .clear, radius: 4)
-            }
-            .padding(.top, 4)
-            
-            Divider()
-                .background(Color.white.opacity(0.2))
-            
-            // File Selection
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Current Video")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                
-                HStack {
-                    Image(systemName: "film")
+
+                if wallpaperManager.isWallpaperActive {
+                    Circle()
+                        .fill(Color.primary)
+                        .frame(width: 6, height: 6)
+                        .padding(.trailing, 2)
+                }
+
+                Menu {
+                    Text("Version 1.0")
+                    Divider()
+                    Button("Quit") {
+                        NSApplication.shared.terminate(nil)
+                    }
+                } label: {
+                    Image(systemName: "gearshape")
+                        .font(.system(size: 13, weight: .medium))
                         .foregroundStyle(.secondary)
-                    
-                    Text(wallpaperManager.currentVideoURL?.lastPathComponent ?? "No video selected")
-                        .font(.callout)
-                        .lineLimit(1)
-                        .truncationMode(.middle)
-                        .foregroundStyle(wallpaperManager.currentVideoURL != nil ? .primary : .secondary)
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        wallpaperManager.selectVideo()
-                    }) {
-                        Text("Select")
-                            .font(.caption)
-                            .fontWeight(.medium)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                    }
-                    .buttonStyle(.bordered)
-                    .clipShape(Capsule())
+                        .frame(width: 24, height: 24)
+                        .contentShape(Rectangle())
                 }
-                .padding(10)
-                .background(Color.white.opacity(0.05))
-                .cornerRadius(10)
+                .menuStyle(.borderlessButton)
+                .menuIndicator(.hidden)
+                .fixedSize()
             }
-            
-            // Actions
-            HStack(spacing: 12) {
-                Button(action: {
-                    if let url = wallpaperManager.currentVideoURL {
-                        wallpaperManager.setWallpaper(url: url)
-                    }
-                }) {
-                    Label("Apply", systemImage: "play.fill")
-                    
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 6)
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(wallpaperManager.currentVideoURL == nil || wallpaperManager.isWallpaperActive)
-                .tint(.blue)
-                
-                Button(action: {
-                    wallpaperManager.removeWallpaper()
-                }) {
-                    Label("Stop", systemImage: "stop.fill")
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 6)
-                        .foregroundStyle(.white)
-                }
-                .buttonStyle(.bordered)
-                .disabled(!wallpaperManager.isWallpaperActive)
-            }
-            
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+
             Divider()
-                .background(Color.white.opacity(0.2))
-            
-            // Footer
-            HStack {
-                Text("v1.0")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Button("Quit") {
-                    NSApplication.shared.terminate(nil)
+
+            // MARK: - Content
+            VStack(spacing: 12) {
+                if let url = wallpaperManager.currentVideoURL {
+
+                    // File Row
+                    HStack(spacing: 10) {
+                        Image(systemName: "video.fill")
+                            .font(.system(size: 13))
+                            .foregroundStyle(.secondary)
+
+                        Text(url.lastPathComponent)
+                            .font(.system(size: 12, weight: .medium))
+                            .lineLimit(1)
+                            .truncationMode(.middle)
+
+                        Spacer()
+
+                        Button(action: {
+                            wallpaperManager.selectVideo()
+                        }) {
+                            Image(systemName: "folder.badge.plus")
+                                .font(.system(size: 13, weight: .medium))
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundStyle(.secondary)
+                    }
+                    .padding(10)
+                    .background(Color.primary.opacity(0.05))
+                    .cornerRadius(8)
+
+                    // Single Action Button
+                    if wallpaperManager.isWallpaperActive {
+                        Button(action: {
+                            wallpaperManager.removeWallpaper()
+                        }) {
+                            Text("Stop Wallpaper")
+                                .font(.system(size: 13, weight: .medium))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 7)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .background(Color.primary)
+                        .foregroundStyle(Color(nsColor: .windowBackgroundColor))
+                        .cornerRadius(8)
+                    } else {
+                        Button(action: {
+                            wallpaperManager.setWallpaper(url: url)
+                        }) {
+                            Text("Apply Wallpaper")
+                                .font(.system(size: 13, weight: .medium))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 7)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .background(Color.primary)
+                        .foregroundStyle(Color(nsColor: .windowBackgroundColor))
+                        .cornerRadius(8)
+                    }
+
+                } else {
+
+                    // Empty State
+                    VStack(spacing: 10) {
+                        Image(systemName: "film")
+                            .font(.system(size: 24, weight: .light))
+                            .foregroundStyle(.secondary)
+                            .padding(.top, 8)
+
+                        Text("No video selected")
+                            .font(.system(size: 13, weight: .medium))
+
+                        // Text("Select an MP4 file to set as your desktop wallpaper.")
+                        //     .font(.system(size: 11))
+                        //     .foregroundStyle(.secondary)
+                        //     .multilineTextAlignment(.center)
+                        //     .fixedSize(horizontal: false, vertical: true)
+
+                        Button(action: {
+                            wallpaperManager.selectVideo()
+                        }) {
+                            Text("Upload Video")
+                                .font(.system(size: 13, weight: .medium))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 7)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .background(Color.primary)
+                        .foregroundStyle(Color(nsColor: .windowBackgroundColor))
+                        .cornerRadius(8)
+                        .padding(.top, 4)
+                    }
+                    // .padding(16)
+                    // .background(Color.primary.opacity(0.04))
+                    // .overlay(
+                    //     RoundedRectangle(cornerRadius: 10)
+                    //         .stroke(Color.primary.opacity(0.12), lineWidth: 1)
+                    // )
+                    // .cornerRadius(10)
                 }
-                .font(.caption)
-                .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
             }
+            .padding(16)
         }
-        .padding(16)
-        .frame(width: 320)
-        .background(Color.black.opacity(0.4))
+        .frame(width: 300)
+        .background(VisualEffectView().ignoresSafeArea())
     }
+}
+
+struct VisualEffectView: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSVisualEffectView {
+        let view = NSVisualEffectView()
+        view.blendingMode = .behindWindow
+        view.state = .active
+        view.material = .popover
+        return view
+    }
+
+    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {}
 }
 
 #Preview {
