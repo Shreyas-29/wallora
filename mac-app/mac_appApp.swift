@@ -10,6 +10,13 @@ import SwiftUI
 @main
 struct mac_appApp: App {
     var body: some Scene {
+        WindowGroup {
+            HomeView()
+                // Use a modern dark theme to match concept4
+                .preferredColorScheme(.dark)
+        }
+        .windowStyle(.hiddenTitleBar)
+
         MenuBarExtra("Wallora", image: "MenuBarIcon") {
             ContentView()
         }
