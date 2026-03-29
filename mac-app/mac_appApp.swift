@@ -17,7 +17,7 @@ struct mac_appApp: App {
         }
         .windowStyle(.hiddenTitleBar)
 
-        MenuBarExtra("Wallora", image: "MenuBarIcon") {
+        MenuBarExtra("Wallora", systemImage: "sparkle") {
             ContentView()
         }
         .menuBarExtraStyle(.window) // Creates a popover-style menu

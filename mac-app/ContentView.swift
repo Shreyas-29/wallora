@@ -22,6 +22,13 @@ struct ContentView: View {
                 }
 
                 Menu {
+                    Button("Open Wallora Window") {
+                        NSApp.activate(ignoringOtherApps: true)
+                        for window in NSApplication.shared.windows {
+                            window.makeKeyAndOrderFront(nil)
+                        }
+                    }
+                    Divider()
                     Text("Version 1.0")
                     Divider()
                     Button("Quit") {
