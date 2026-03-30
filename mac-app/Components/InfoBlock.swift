@@ -25,8 +25,7 @@ struct InfoBlock: View {
 
             // Title
             Text(theme.title)
-                .font(.system(size: 60, weight: .light, design: .serif))
-                .italic()
+                .font(.system(size: 60, weight: .regular))
                 .foregroundColor(.white)
                 .tracking(-1.5)
                 .shadow(color: .black.opacity(0.3), radius: 10, y: 4)
@@ -76,13 +75,14 @@ struct SetButton: View {
     var body: some View {
         Button(action: {}) {
             Text("Set Wallpaper")
-                .font(.system(size: 14, weight: .medium, design: .rounded))
+                .font(.system(size: 14, weight: .regular, design: .rounded))
                 .tracking(0.1)
                 .padding(.horizontal, 24)
-                .padding(.vertical, 10)
+                .padding(.vertical, 8)
                 .background(hovered ? Color.white.opacity(0.85) : Color.white) // Lighter on hover
                 .foregroundColor(.black)
                 .clipShape(Capsule())
+                .focusable(false)
         }
         .buttonStyle(.plain)
         .onHover { h in 
@@ -112,9 +112,10 @@ struct SaveButton: View {
                     .font(.system(size: 15, weight: .medium))
                     .foregroundColor(isSaved ? .red : (hovered ? .white : Color.white.opacity(0.8)))
             }
-            .frame(width: 40, height: 40) // Slightly smaller, tightly matched, removed bouncy scale
+            .frame(width: 38, height: 38) // Slightly smaller, tightly matched, removed bouncy scale
         }
         .buttonStyle(.plain)
         .onHover { h in withAnimation(.easeInOut(duration: 0.2)) { hovered = h } }
+        .focusable(false)
     }
 }

@@ -6,71 +6,67 @@ struct NavigationBar: View {
     @Namespace private var animation
 
     var body: some View {
-        HStack {
-            // Left Side: Logo and Tabs as a single cohesive unit
-            HStack(spacing: 24) {
-                // Brand
-                HStack(spacing: 8) {
+        ZStack {
+            HStack {
+                HStack(spacing: 6) {
                     Image(systemName: "sparkle")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(.black)
-                        .frame(width: 24, height: 24)
-                        .background(Color.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(.white)
                     
                     Text("Wallora")
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                        .font(.system(size: 15, weight: .regular, design: .rounded))
                         .foregroundColor(.white)
                         .tracking(-0.3)
                 }
+                .padding(.leading, 80)
                 
-                // Tabs
-                HStack(spacing: 0) {
-                    ForEach(tabs, id: \.self) { tab in
-                        Button(action: {
-                            withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
-                                selectedTab = tab
-                            }
-                        }) {
-                            Text(tab)
-                                .font(.system(size: 13, weight: .regular, design: .default))
-                                .foregroundColor(selectedTab == tab ? .black : Color.white.opacity(0.6))
-                                .padding(.horizontal, 14)
-                                .padding(.vertical, 7)
-                                .background(
-                                    ZStack {
-                                        if selectedTab == tab {
-                                            Capsule()
-                                                .fill(Color.white)
-                                                .matchedGeometryEffect(id: "activeTabBackground", in: animation)
-                                        }
-                                    }
-                                )
-                        }
-                        .buttonStyle(.plain)
-                        .focusable(false) // removes keyboard focus ring
-                        .contentShape(Capsule())
-                    }
-                }
-                .padding(4)
-                .background(
-                    Capsule()
-                        .fill(Color.white.opacity(0.1)) // Glassy capsule wrapping the tabs
-                )
+                Spacer()
             }
-            .padding(.leading, 80) // Generous padding from the traffic lights
             
-            Spacer()
-
-            // Right Side: Only Upload (Plus) and Settings (Gear)
-            HStack(spacing: 12) {
-                IconButton(systemName: "plus")        // Upload icon
-                IconButton(systemName: "gear")   // Settings icon
+            HStack(spacing: 0) {
+                ForEach(tabs, id: \.self) { tab in
+                    Button(action: {
+                        withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                            selectedTab = tab
+                        }
+                    }) {
+                        Text(tab)
+                            .font(.system(size: 13, weight: .regular, design: .default))
+                            .foregroundColor(selectedTab == tab ? .black : Color.white.opacity(0.6))
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 7)
+                            .contentShape(Rectangle())
+                            .background(
+                                ZStack {
+                                    if selectedTab == tab {
+                                        Capsule()
+                                            .fill(Color.white)
+                                            .matchedGeometryEffect(id: "activeTabBackground", in: animation)
+                                    }
+                                }
+                            )
+                    }
+                    .buttonStyle(.plain)
+                    .focusable(false)
+                }
             }
-            .padding(.trailing, 24)
+            .padding(4)
+            .background(
+                Capsule()
+                    .fill(Color.white.opacity(0.1))
+            )
+            
+            HStack {
+                Spacer()
+                HStack(spacing: 12) {
+                    IconButton(systemName: "plus")
+                    IconButton(systemName: "gear")
+                }
+                .padding(.trailing, 24)
+            }
         }
         .frame(height: 50)
-        .padding(.top, 2)
+        .padding(.top, 20)
     }
 }
 
@@ -81,15 +77,16 @@ struct IconButton: View {
     var body: some View {
         Button(action: {}) {
             Image(systemName: systemName)
-                .font(.system(size: 14, weight: .semibold))
+                .font(.system(size: 12, weight: .regular))
                 .foregroundColor(isHovered ? .white : Color.white.opacity(0.7))
-                .frame(width: 36, height: 36)
+                .frame(width: 32, height: 32)
+                .contentShape(Rectangle())
                 .background(
-                    RoundedRectangle(cornerRadius: 10)
+                    RoundedRectangle(cornerRadius: 99)
                         .fill(isHovered ? Color.white.opacity(0.15) : Color.white.opacity(0.08))
                 )
                 .overlay(
-                    RoundedRectangle(cornerRadius: 10)
+                    RoundedRectangle(cornerRadius: 99)
                         .stroke(Color.white.opacity(isHovered ? 0.2 : 0.05), lineWidth: 1)
                 )
         }
