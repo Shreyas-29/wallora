@@ -5,7 +5,14 @@ struct HomeView: View {
     @State private var selectedTab = "Home"
     @State private var textBlur: CGFloat = 0
 
-    let themes = sampleWallpapers
+    var themes: [WallpaperTheme] {
+        switch selectedTab {
+        case "Home": return homeWallpapers
+        case "Explore": return exploreWallpapers
+        case "Library": return savedWallpapers + userUploadedWallpapers
+        default: return homeWallpapers
+        }
+    }
 
     var body: some View {
         ZStack {
@@ -35,6 +42,10 @@ struct HomeView: View {
                 }
             }
             .ignoresSafeArea()
+            .onChange(of: selectedTab) { _ in
+                // Reset index safely when changing tabs to prevent array out of bounds
+                activeIndex = 0
+            }
 
             // Vignettes for better text contrast
             LinearGradient(gradient: Gradient(colors: [Color.black.opacity(0.35), .clear, .clear, Color.black.opacity(0.85)]), startPoint: .top, endPoint: .bottom)
@@ -53,32 +64,79 @@ struct HomeView: View {
                     
                     Spacer()
 
-                    // Bottom Split layout (30% Left / 70% Right layout mathematically)
-                    HStack(alignment: .bottom, spacing: 0) {
-                        
-                        // Left Info Block with active BLUR animation on changing
-                        InfoBlock(theme: themes[activeIndex])
-                            .frame(width: layoutGeo.size.width * 0.35, alignment: .leading)
-                            .id(themes[activeIndex].id)
-                            .transition(.opacity.combined(with: .scale(scale: 0.96, anchor: .bottomLeading)))
-                            .blur(radius: textBlur) 
-                        
-                        Spacer()
-                        
-                        // Right Side Dock
-                        DockView(activeIndex: $activeIndex, themes: themes)
-                            .frame(width: layoutGeo.size.width * 0.55, alignment: .trailing)
-                    }
-                    .padding(.horizontal, 40)
-                    .padding(.bottom, 40)
-                    .onChange(of: activeIndex) { _ in
-                        // Fires blur pulse correctly mapped to index toggle
-                        textBlur = 12
-                        withAnimation(.easeOut(duration: 0.6)) {
-                            textBlur = 0
+                    // Bottom Tab Switcher
+                    if selectedTab == "Home" {
+                        // THE HERO DOCK LAYOUT
+                        HStack(alignment: .bottom, spacing: 0) {
+                            
+                            // Left Info Block with active BLUR animation on changing
+                            InfoBlock(theme: themes[activeIndex])
+                                .frame(width: layoutGeo.size.width * 0.35, alignment: .leading)
+                                .id(themes[activeIndex].id)
+                                .transition(.opacity.combined(with: .scale(scale: 0.96, anchor: .bottomLeading)))
+                                .blur(radius: textBlur)
+                            
+                            Spacer()
+                            
+                            // Right Side Dock
+                            DockView(activeIndex: $activeIndex, themes: themes)
+                                .frame(width: layoutGeo.size.width * 0.55, alignment: .trailing)
                         }
+                        .padding(.horizontal, 40)
+                        .padding(.bottom, 40)
+                        .transition(.opacity.combined(with: .move(edge: .bottom)))
+                        .onChange(of: activeIndex) { _ in
+                            textBlur = 12
+                            withAnimation(.easeOut(duration: 0.6)) {
+                                textBlur = 0
+                            }
+                        }
+                    } else if selectedTab == "Explore" {
+                        // EXPLORE GRID GALLERY
+                        ScrollView(.vertical, showsIndicators: false) {
+                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 280), spacing: 20)], spacing: 30) {
+                                ForEach(themes) { theme in
+                                    Rectangle()
+                                        .fill(Color.white.opacity(0.05))
+                                        .frame(height: 160)
+                                        .cornerRadius(12)
+                                        .overlay(Text("Community Grid Placeholder").foregroundColor(.white.opacity(0.3)))
+                                }
+                            }
+                            .padding(.horizontal, 40)
+                            .padding(.top, 20)
+                        }
+                        .transition(.opacity)
+                    } else if selectedTab == "Library" {
+                        // LIBRARY GRID GALLERY
+                        ScrollView(.vertical, showsIndicators: false) {
+                            VStack(alignment: .leading, spacing: 20) {
+                                Text("Saved Wallpapers")
+                                    .font(.system(size: 18, weight: .bold))
+                                    .foregroundColor(.white)
+                                LazyVGrid(columns: [GridItem(.adaptive(minimum: 280), spacing: 20)], spacing: 30) {
+                                    ForEach(savedWallpapers) { theme in
+                                        Rectangle().fill(Color.white.opacity(0.05)).frame(height: 160).cornerRadius(12)
+                                    }
+                                }
+                                
+                                Text("My Uploads")
+                                    .font(.system(size: 18, weight: .bold))
+                                    .foregroundColor(.white)
+                                    .padding(.top, 30)
+                                LazyVGrid(columns: [GridItem(.adaptive(minimum: 280), spacing: 20)], spacing: 30) {
+                                    ForEach(userUploadedWallpapers) { theme in
+                                        Rectangle().fill(Color.white.opacity(0.05)).frame(height: 160).cornerRadius(12)
+                                    }
+                                }
+                            }
+                            .padding(.horizontal, 40)
+                            .padding(.top, 20)
+                        }
+                        .transition(.opacity)
                     }
                 }
+                .animation(.easeInOut(duration: 0.4), value: selectedTab)
             }
         }
         .frame(minWidth: 900, idealWidth: 1200, minHeight: 600, idealHeight: 800)
