@@ -12,7 +12,7 @@ struct NavigationBar: View {
                 // Brand
                 HStack(spacing: 8) {
                     Image(systemName: "sparkle")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.system(size: 14, weight: .medium))
                         .foregroundColor(.black)
                         .frame(width: 24, height: 24)
                         .background(Color.white)
@@ -33,10 +33,10 @@ struct NavigationBar: View {
                             }
                         }) {
                             Text(tab)
-                                .font(.system(size: 13, weight: .medium, design: .default))
+                                .font(.system(size: 13, weight: .regular, design: .default))
                                 .foregroundColor(selectedTab == tab ? .black : Color.white.opacity(0.6))
                                 .padding(.horizontal, 14)
-                                .padding(.vertical, 6)
+                                .padding(.vertical, 7)
                                 .background(
                                     ZStack {
                                         if selectedTab == tab {
@@ -65,7 +65,7 @@ struct NavigationBar: View {
             // Right Side: Only Upload (Plus) and Settings (Gear)
             HStack(spacing: 12) {
                 IconButton(systemName: "plus")        // Upload icon
-                IconButton(systemName: "gearshape")   // Settings icon
+                IconButton(systemName: "gear")   // Settings icon
             }
             .padding(.trailing, 24)
         }
