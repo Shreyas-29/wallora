@@ -3,6 +3,7 @@ import SwiftUI
 struct HomeView: View {
     @State private var activeIndex = 0
     @State private var selectedTab = "Home"
+    @State private var exploreSearchText = ""
     @State private var textBlur: CGFloat = 0
 
     var themes: [WallpaperTheme] {
@@ -97,10 +98,12 @@ struct HomeView: View {
                                 // Search Bar
                                 HStack {
                                     Image(systemName: "magnifyingglass").foregroundColor(.white.opacity(0.5))
-                                    Text("Search community wallpapers...").foregroundColor(.white.opacity(0.5))
-                                    Spacer()
+                                    TextField("Search community wallpapers...", text: $exploreSearchText)
+                                        .textFieldStyle(.plain)
+                                        .foregroundColor(.white)
                                 }
-                                .padding()
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 10)
                                 .background(Color.white.opacity(0.08))
                                 .cornerRadius(12)
                                 .padding(.bottom, 15)
@@ -157,8 +160,8 @@ struct HomeView: View {
                         .transition(.opacity)
                     }
                 }
-                .animation(.easeInOut(duration: 0.4), value: selectedTab)
             }
+            .ignoresSafeArea(.all, edges: .top)
         }
         .frame(minWidth: 900, idealWidth: 1200, minHeight: 600, idealHeight: 800)
         .background(Color.black)

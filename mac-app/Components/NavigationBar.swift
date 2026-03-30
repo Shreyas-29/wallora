@@ -69,8 +69,8 @@ struct NavigationBar: View {
             }
             .padding(.trailing, 24)
         }
-        .frame(height: 60)
-        .padding(.top, 10)
+        .frame(height: 50)
+        .padding(.top, 2)
     }
 }
 
