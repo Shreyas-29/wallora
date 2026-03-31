@@ -1,7 +1,7 @@
 import Cocoa
 import AVFoundation
 import SwiftUI
-internal import Combine
+import Combine
 
 @MainActor
 final class WallpaperManager: ObservableObject {
