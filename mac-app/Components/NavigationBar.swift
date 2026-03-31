@@ -2,8 +2,16 @@ import SwiftUI
 
 struct NavigationBar: View {
     @Binding var selectedTab: String
-    let tabs = ["Home", "Explore", "Library"]
+    @StateObject private var admin = AdminManager.shared
     @Namespace private var animation
+    
+    var tabs: [String] {
+        var base = ["Home", "Explore", "Library"]
+        if admin.isAdminUnlocked {
+            base.append("Upload")
+        }
+        return base
+    }
 
     var body: some View {
         ZStack {
@@ -59,8 +67,14 @@ struct NavigationBar: View {
             HStack {
                 Spacer()
                 HStack(spacing: 12) {
-                    IconButton(systemName: "plus")
-                    IconButton(systemName: "gear")
+                    if admin.isAdminUnlocked {
+                        IconButton(systemName: "plus") {
+                            withAnimation { selectedTab = "Upload" }
+                        }
+                    }
+                    IconButton(systemName: "gear") {
+                        // Settings coming soon
+                    }
                 }
                 .padding(.trailing, 24)
             }
@@ -72,10 +86,11 @@ struct NavigationBar: View {
 
 struct IconButton: View {
     let systemName: String
+    let action: () -> Void
     @State private var isHovered = false
 
     var body: some View {
-        Button(action: {}) {
+        Button(action: action) {
             Image(systemName: systemName)
                 .font(.system(size: 12, weight: .regular))
                 .foregroundColor(isHovered ? .white : Color.white.opacity(0.7))

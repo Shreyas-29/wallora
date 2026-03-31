@@ -75,43 +75,47 @@ struct VideoPreviewPlayer: View {
     let videoURL: URL
     let thumbURL: URL?
     @State private var player: AVQueuePlayer?
+    @State private var looper: AVPlayerLooper?
     @State private var isReady = false
     
     var body: some View {
         ZStack {
-            // Instant Thumbnail so it never looks like it's "spinning"
+            // Instant Thumbnail (Hidden once video is 100% ready)
             if let thumbURL = thumbURL {
                 BetterCachedImage(url: thumbURL)
                     .aspectRatio(contentMode: .fill)
+                    .opacity(isReady ? 0 : 1)
             }
             
-            // Video Layer (Hidden until ready)
+            // Video Layer
             VideoPlayerView(player: player)
-                .opacity(isReady ? 1.0 : 0.0)
                 .onAppear {
                     setupPlayer()
                 }
                 .onDisappear {
                     player?.pause()
                     player = nil
+                    looper = nil
                 }
         }
-        .animation(.easeInOut(duration: 0.5), value: isReady)
     }
     
     private func setupPlayer() {
         let asset = AVURLAsset(url: videoURL)
         let item = AVPlayerItem(asset: asset)
-        
-        // Listen for when video is actually ready to show
         let queuePlayer = AVQueuePlayer(playerItem: item)
         queuePlayer.isMuted = true
         queuePlayer.preventsDisplaySleepDuringVideoPlayback = false
         
-        // Simple logic to fade in video after it starts playing
+        // Loop infinitely
+        self.looper = AVPlayerLooper(player: queuePlayer, templateItem: item)
+        
+        // Clear the thumbnail once we have frames
         queuePlayer.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.1, preferredTimescale: 600), queue: .main) { _ in
             if !isReady {
-                isReady = true
+                withAnimation(.easeInOut(duration: 0.4)) {
+                    isReady = true
+                }
             }
         }
         
