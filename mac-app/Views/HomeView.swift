@@ -29,17 +29,19 @@ struct HomeView: View {
         ZStack {
             Color.black.ignoresSafeArea()
             
-            // Background Wallpaper layer ONLY FOR HOME
+            // Background Video layer ONLY FOR HOME
             if selectedTab == "Home", !currentWallpapers.isEmpty {
                 GeometryReader { geo in
                     ZStack {
                         ForEach(0..<currentWallpapers.count, id: \.self) { index in
-                            BetterCachedImage(url: WallpaperStore.shared.getFullThumbURL(for: currentWallpapers[index]))
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: geo.size.width, height: geo.size.height)
-                                .clipped()
-                                .opacity(activeIndex == index ? 0.6 : 0.0)
-                                .animation(.easeOut(duration: 0.55), value: activeIndex)
+                            if let videoURL = WallpaperStore.shared.getFullVideoURL(for: currentWallpapers[index]) {
+                                VideoPreviewPlayer(videoURL: videoURL, thumbURL: WallpaperStore.shared.getFullThumbURL(for: currentWallpapers[index]))
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: geo.size.width, height: geo.size.height)
+                                    .clipped()
+                                    .opacity(activeIndex == index ? 0.6 : 0.0)
+                                    .animation(.easeOut(duration: 0.55), value: activeIndex)
+                            }
                         }
                     }
                 }
@@ -73,9 +75,8 @@ struct HomeView: View {
                                 
                                 Spacer()
                                 
-                                // Fixed Dock Alignment to fit 5 thumbnails perfectly
                                 DockView(activeIndex: $activeIndex, wallpapers: currentWallpapers)
-                                    .frame(width: 610, alignment: .trailing) // (110 width * 5) + (8 spacing * 4) + padding
+                                    .frame(alignment: .trailing)
                             }
                             .padding(.horizontal, 40)
                             .padding(.bottom, 40)
@@ -109,7 +110,6 @@ struct HomeView: View {
                                                 .foregroundColor(.white)
                                                 .padding(.leading, 4)
                                             
-                                            // Grid with fixed height to avoid "pinched" look
                                             LazyVGrid(columns: [GridItem(.adaptive(minimum: 320), spacing: 24)], spacing: 32) {
                                                 ForEach(catWallpapers) { wp in
                                                     WallpaperCard(wallpaper: wp)
@@ -151,25 +151,25 @@ struct WallpaperCard: View {
                 // Background Thumbnail (Cached)
                 BetterCachedImage(url: WallpaperStore.shared.getFullThumbURL(for: wallpaper))
                     .aspectRatio(contentMode: .fill)
-                    .frame(height: 190) // Increased height for better aspect ratio
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .frame(height: 190)
                 
-                // Hovered Video Preview
+                // Hovered Video Preview (Fixed Frame to prevent height expansion glitch)
                 if isHovered, let videoURL = WallpaperStore.shared.getFullVideoURL(for: wallpaper) {
                     let thumbURL = WallpaperStore.shared.getFullThumbURL(for: wallpaper)
                     VideoPreviewPlayer(videoURL: videoURL, thumbURL: thumbURL)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .frame(height: 190) // STRICT FIXED HEIGHT
+                        .clipped()
                         .transition(.opacity.animation(.easeInOut(duration: 0.3)))
                 }
                 
-                // Shadow / Lift effect overlay
                 if isHovered {
-                    RoundedRectangle(cornerRadius: 16)
+                    Rectangle()
                         .fill(Color.white.opacity(0.05))
-                        .shadow(color: .white.opacity(0.1), radius: 20)
+                        .shadow(color: .white.opacity(0.05), radius: 10)
                 }
             }
             .frame(height: 190)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
             .shadow(color: .black.opacity(0.3), radius: 15, y: 10)
             
             VStack(alignment: .leading, spacing: 4) {

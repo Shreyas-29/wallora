@@ -17,10 +17,10 @@ struct DockView: View {
                     }
                 }
                 .padding(.vertical, 8)
-                .padding(.horizontal, 8) 
+                .padding(.horizontal, 8) // FIXED: Symmetric padding
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading) 
+        .frame(width: 598) // Perfect width for 5 cards (5*110 + 4*8 + 16px)
         .background(
             RoundedRectangle(cornerRadius: 18)
                 .fill(.ultraThinMaterial) 
@@ -56,8 +56,7 @@ struct ThumbnailView: View {
         }
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(isActive ? Color.white.opacity(0.8) : Color.white.opacity(0.1), lineWidth: 1.5)
+                .stroke(isActive ? Color.white : Color.clear, lineWidth: 2) // FIXED: Bold white for active only
         )
-        .scaleEffect(isActive ? 1.03 : 1.0)
     }
 }

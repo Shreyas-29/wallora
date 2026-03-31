@@ -121,8 +121,9 @@ struct SetButton: View {
             Task {
                 guard let url = WallpaperStore.shared.getFullVideoURL(for: wallpaper) else { return }
                 do {
-                    let localURL = try await downloadManager.download(wallpaper, from: url)
-                    wallpaperManager.setWallpaper(url: localURL)
+                    let _ = try await downloadManager.download(wallpaper, from: url)
+                    // We don't automatically set it anymore per user request.
+                    // The button will update its text to "Apply Wallpaper" automatically because it checks 'isDownloaded'
                 } catch {
                     print("Download failed: \(error)")
                 }
