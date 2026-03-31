@@ -1,4 +1,5 @@
 import SwiftUI
+import Foundation
 
 struct HomeView: View {
     @StateObject private var store = WallpaperStore.shared
@@ -18,7 +19,7 @@ struct HomeView: View {
                 return store.wallpapers.filter { $0.title.localizedCaseInsensitiveContains(exploreSearchText) || $0.category.localizedCaseInsensitiveContains(exploreSearchText) }
             }
         case "Library": 
-            return [] // Track downloaded or liked ones later
+            return [] 
         default: 
             return store.wallpapers
         }
@@ -33,26 +34,19 @@ struct HomeView: View {
                 GeometryReader { geo in
                     ZStack {
                         ForEach(0..<currentWallpapers.count, id: \.self) { index in
-                            CachedImage(url: WallpaperStore.shared.getFullThumbURL(for: currentWallpapers[index])) { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: geo.size.width, height: geo.size.height)
-                                    .clipped()
-                            } placeholder: {
-                                Color.black
-                            }
-                            .opacity(activeIndex == index ? 0.7 : 0.0)
-                            .animation(.easeOut(duration: 0.55), value: activeIndex)
+                            BetterCachedImage(url: WallpaperStore.shared.getFullThumbURL(for: currentWallpapers[index]))
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: geo.size.width, height: geo.size.height)
+                                .clipped()
+                                .opacity(activeIndex == index ? 0.6 : 0.0)
+                                .animation(.easeOut(duration: 0.55), value: activeIndex)
                         }
                     }
                 }
                 .ignoresSafeArea()
                 .transition(.opacity)
 
-                // Vignettes for better text contrast
-                LinearGradient(gradient: Gradient(colors: [Color.black.opacity(0.35), .clear, .clear, Color.black.opacity(0.85)]), startPoint: .top, endPoint: .bottom)
-                    .blendMode(.multiply)
+                LinearGradient(gradient: Gradient(colors: [Color.black.opacity(0.4), .clear, .clear, Color.black.opacity(0.9)]), startPoint: .top, endPoint: .bottom)
                     .ignoresSafeArea()
             }
 
@@ -63,41 +57,41 @@ struct HomeView: View {
                     
                     if store.isLoading {
                         Spacer()
-                        ProgressView("Loading library...")
+                        ProgressView("Fetching library...")
+                            .tint(.white)
                         Spacer()
                     } else {
                         Spacer()
 
-                        // Bottom Tab Switcher
                         if selectedTab == "Home", !currentWallpapers.isEmpty {
                             HStack(alignment: .bottom, spacing: 0) {
                                 InfoBlock(wallpaper: currentWallpapers[activeIndex])
                                     .frame(width: layoutGeo.size.width * 0.35, alignment: .leading)
                                     .id(currentWallpapers[activeIndex].id)
-                                    .transition(.opacity.combined(with: .scale(scale: 0.96, anchor: .bottomLeading)))
+                                    .transition(.opacity.combined(with: .scale(scale: 0.98, anchor: .bottomLeading)))
                                     .blur(radius: textBlur)
                                 
                                 Spacer()
                                 
+                                // Fixed Dock Alignment to fit 5 thumbnails perfectly
                                 DockView(activeIndex: $activeIndex, wallpapers: currentWallpapers)
-                                    .frame(width: layoutGeo.size.width * 0.55, alignment: .trailing)
+                                    .frame(width: 610, alignment: .trailing) // (110 width * 5) + (8 spacing * 4) + padding
                             }
                             .padding(.horizontal, 40)
                             .padding(.bottom, 40)
                             .transition(.opacity.combined(with: .move(edge: .bottom)))
                             .onChange(of: activeIndex) { _ in
-                                textBlur = 12
-                                withAnimation(.easeOut(duration: 0.6)) {
+                                textBlur = 10
+                                withAnimation(.easeOut(duration: 0.5)) {
                                     textBlur = 0
                                 }
                             }
                         } else if selectedTab == "Explore" {
                             ScrollView(.vertical, showsIndicators: false) {
                                 VStack(alignment: .leading, spacing: 20) {
-                                    // Search Bar
                                     HStack {
                                         Image(systemName: "magnifyingglass").foregroundColor(.white.opacity(0.5))
-                                        TextField("Search community wallpapers...", text: $exploreSearchText)
+                                        TextField("Search library...", text: $exploreSearchText)
                                             .textFieldStyle(.plain)
                                             .foregroundColor(.white)
                                     }
@@ -107,20 +101,21 @@ struct HomeView: View {
                                     .cornerRadius(12)
                                     .padding(.bottom, 15)
                                     
-                                    // Categories (Grouped)
                                     ForEach(Array(Set(store.wallpapers.map { $0.category })).sorted(), id: \.self) { cat in
                                         let catWallpapers = currentWallpapers.filter { $0.category == cat }
                                         if !catWallpapers.isEmpty {
                                             Text(cat)
-                                                .font(.system(size: 18, weight: .semibold))
+                                                .font(.system(size: 18, weight: .semibold, design: .rounded))
                                                 .foregroundColor(.white)
+                                                .padding(.leading, 4)
                                             
-                                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 280), spacing: 20)], spacing: 30) {
+                                            // Grid with fixed height to avoid "pinched" look
+                                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 320), spacing: 24)], spacing: 32) {
                                                 ForEach(catWallpapers) { wp in
                                                     WallpaperCard(wallpaper: wp)
                                                 }
                                             }
-                                            .padding(.bottom, 30)
+                                            .padding(.bottom, 40)
                                         }
                                     }
                                 }
@@ -131,8 +126,8 @@ struct HomeView: View {
                         } else if selectedTab == "Library" {
                             VStack {
                                 Spacer()
-                                Text("Your liked and downloaded wallpapers will appear here.")
-                                    .foregroundColor(.secondary)
+                                Text("Premium features coming soon.")
+                                    .foregroundColor(.white.opacity(0.4))
                                 Spacer()
                             }
                         }
@@ -151,44 +146,45 @@ struct WallpaperCard: View {
     @State private var isHovered = false
     
     var body: some View {
-        ZStack(alignment: .bottomLeading) {
-            CachedImage(url: WallpaperStore.shared.getFullThumbURL(for: wallpaper)) { image in
-                image
-                    .resizable()
+        VStack(alignment: .leading, spacing: 12) {
+            ZStack(alignment: .center) {
+                // Background Thumbnail (Cached)
+                BetterCachedImage(url: WallpaperStore.shared.getFullThumbURL(for: wallpaper))
                     .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                Color.white.opacity(0.05)
-            }
-            .frame(height: 160)
-            
-            LinearGradient(gradient: Gradient(colors: [.clear, .black.opacity(0.8)]), startPoint: .top, endPoint: .bottom)
-            
-            VStack(alignment: .leading, spacing: 6) {
-                Spacer()
-                Text(wallpaper.category)
-                    .font(.system(size: 10, weight: .bold))
-                    .foregroundColor(.white.opacity(0.7))
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.black.opacity(0.4))
-                    .cornerRadius(6)
+                    .frame(height: 190) // Increased height for better aspect ratio
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
                 
-                Text(wallpaper.title)
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundColor(.white)
+                // Hovered Video Preview
+                if isHovered, let videoURL = WallpaperStore.shared.getFullVideoURL(for: wallpaper) {
+                    let thumbURL = WallpaperStore.shared.getFullThumbURL(for: wallpaper)
+                    VideoPreviewPlayer(videoURL: videoURL, thumbURL: thumbURL)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .transition(.opacity.animation(.easeInOut(duration: 0.3)))
+                }
+                
+                // Shadow / Lift effect overlay
+                if isHovered {
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color.white.opacity(0.05))
+                        .shadow(color: .white.opacity(0.1), radius: 20)
+                }
             }
-            .padding(12)
+            .frame(height: 190)
+            .shadow(color: .black.opacity(0.3), radius: 15, y: 10)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(wallpaper.title)
+                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .foregroundColor(.white)
+                
+                Text(wallpaper.category)
+                    .font(.system(size: 12))
+                    .foregroundColor(.white.opacity(0.5))
+            }
+            .padding(.leading, 4)
         }
-        .frame(height: 160)
-        .cornerRadius(12)
-        .scaleEffect(isHovered ? 1.02 : 1)
-        .shadow(color: Color.black.opacity(isHovered ? 0.4 : 0), radius: 10, y: 5)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.white.opacity(isHovered ? 0.3 : 0.0), lineWidth: 1.5)
-        )
         .onHover { hover in
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                 isHovered = hover
             }
         }

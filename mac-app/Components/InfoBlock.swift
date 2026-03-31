@@ -27,9 +27,11 @@ struct InfoBlock: View {
 
             // Title
             Text(wallpaper.title)
-                .font(.system(size: 60, weight: .regular))
+                .font(.system(size: 44, weight: .regular)) // Reduced from 60
                 .foregroundColor(.white)
                 .tracking(-1.5)
+                .lineLimit(1) // Force one line
+                .minimumScaleFactor(0.8) // Shrink slightly more if needed
                 .shadow(color: .black.opacity(0.3), radius: 10, y: 4)
                 .padding(.bottom, 12)
 

@@ -37,16 +37,15 @@ struct ThumbnailView: View {
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            CachedImage(url: WallpaperStore.shared.getFullThumbURL(for: wallpaper)) { image in
-                image.resizable().aspectRatio(contentMode: .fill)
-            } placeholder: {
-                Color.white.opacity(0.05)
-            }
-            .opacity(isActive ? 1.0 : (hovered ? 0.8 : 0.6))
+            BetterCachedImage(url: WallpaperStore.shared.getFullThumbURL(for: wallpaper))
+                .aspectRatio(contentMode: .fill)
+                .opacity(isActive ? 1.0 : (hovered ? 0.9 : 0.6))
             
-            LinearGradient(colors: [Color.black.opacity(0.6), .clear], startPoint: .bottom, endPoint: .center)
+            if !isActive {
+                Color.black.opacity(hovered ? 0.05 : 0.2)
+            }
         }
-        .frame(width: 96, height: 54)
+        .frame(width: 110, height: 62)
         .clipShape(RoundedRectangle(cornerRadius: 12)) 
         .contentShape(Rectangle())
         .onTapGesture(perform: action)
@@ -57,7 +56,8 @@ struct ThumbnailView: View {
         }
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(isActive ? Color.white.opacity(0.5) : Color.white.opacity(0.05), lineWidth: 1.5)
+                .stroke(isActive ? Color.white.opacity(0.8) : Color.white.opacity(0.1), lineWidth: 1.5)
         )
+        .scaleEffect(isActive ? 1.03 : 1.0)
     }
 }

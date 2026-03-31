@@ -51,7 +51,7 @@ final class WallpaperManager: ObservableObject {
     
     private func setupWallpaperFor(screen: NSScreen, url: URL) {
         // Setup Player
-        let asset = AVAsset(url: url)
+        let asset = AVURLAsset(url: url)
         let item = AVPlayerItem(asset: asset)
         
         let queuePlayer = AVQueuePlayer(playerItem: item)
