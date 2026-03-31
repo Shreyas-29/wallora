@@ -1,13 +1,15 @@
 import SwiftUI
 
 struct InfoBlock: View {
-    let theme: WallpaperTheme
+    let wallpaper: Wallpaper
+    @StateObject private var downloadManager = DownloadManager.shared
+    @StateObject private var wallpaperManager = WallpaperManager.shared
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             
             // Category Chip
-            Text(theme.category)
+            Text(wallpaper.category)
                 .font(.system(size: 11, weight: .regular, design: .default))
                 .tracking(0.5)
                 .foregroundColor(Color.white.opacity(0.8))
@@ -24,7 +26,7 @@ struct InfoBlock: View {
                 .padding(.bottom, 12)
 
             // Title
-            Text(theme.title)
+            Text(wallpaper.title)
                 .font(.system(size: 60, weight: .regular))
                 .foregroundColor(.white)
                 .tracking(-1.5)
@@ -33,18 +35,17 @@ struct InfoBlock: View {
 
             // Meta Line
             HStack(spacing: 6) {
-                MetaText(text: theme.resolution)
+                MetaText(text: wallpaper.resolution ?? "4K")
                 MetaSeparator()
-                MetaText(text: theme.dimensions)
+                MetaText(text: "3840 × 2160")
                 MetaSeparator()
-                MetaText(text: theme.size)
+                MetaText(text: wallpaper.size ?? "80 MB")
             }
-            // Drastically reduced gap down to Set Wallpaper per user request
             .padding(.bottom, 18) 
 
             // Action Buttons
             HStack(spacing: 12) {
-                SetButton()
+                SetButton(wallpaper: wallpaper)
                 SaveButton()
             }
         }
@@ -70,24 +71,60 @@ struct MetaSeparator: View {
 }
 
 struct SetButton: View {
+    let wallpaper: Wallpaper
     @State private var hovered = false
+    @StateObject private var downloadManager = DownloadManager.shared
+    @StateObject private var wallpaperManager = WallpaperManager.shared
+    
+    private var isDownloaded: Bool {
+        downloadManager.isDownloaded(wallpaper: wallpaper)
+    }
+    
+    private var progress: Double? {
+        downloadManager.activeDownloads[wallpaper.id]
+    }
 
     var body: some View {
-        Button(action: {}) {
-            Text("Set Wallpaper")
-                .font(.system(size: 14, weight: .regular, design: .rounded))
-                .tracking(0.1)
-                .padding(.horizontal, 24)
-                .padding(.vertical, 8)
-                .background(hovered ? Color.white.opacity(0.85) : Color.white) // Lighter on hover
-                .foregroundColor(.black)
-                .clipShape(Capsule())
-                .focusable(false)
+        Button(action: {
+            handleAction()
+        }) {
+            HStack(spacing: 8) {
+                if let progress = progress {
+                    ProgressView()
+                        .controlSize(.small)
+                        .tint(.black)
+                }
+                
+                Text(progress != nil ? "Downloading..." : (isDownloaded ? "Apply Wallpaper" : "Set Wallpaper"))
+                    .font(.system(size: 14, weight: .regular, design: .rounded))
+                    .tracking(0.1)
+            }
+            .padding(.horizontal, 24)
+            .padding(.vertical, 8)
+            .background(hovered ? Color.white.opacity(0.85) : Color.white)
+            .foregroundColor(.black)
+            .clipShape(Capsule())
         }
         .buttonStyle(.plain)
+        .disabled(progress != nil)
         .onHover { h in 
-            // Simple smooth 0.3s opacity transition without scale effect
             withAnimation(.easeInOut(duration: 0.2)) { hovered = h } 
+        }
+    }
+    
+    private func handleAction() {
+        if isDownloaded {
+            wallpaperManager.setWallpaper(url: downloadManager.localURL(for: wallpaper))
+        } else {
+            Task {
+                guard let url = WallpaperStore.shared.getFullVideoURL(for: wallpaper) else { return }
+                do {
+                    let localURL = try await downloadManager.download(wallpaper, from: url)
+                    wallpaperManager.setWallpaper(url: localURL)
+                } catch {
+                    print("Download failed: \(error)")
+                }
+            }
         }
     }
 }
@@ -103,16 +140,15 @@ struct SaveButton: View {
             }
         }) {
             ZStack {
-                // Removed Border explicitly to maintain absolute consistency with right Nav icons
                 Circle()
                     .fill(hovered ? Color.white.opacity(0.15) : Color.white.opacity(0.05))
-                    .background(.ultraThinMaterial, in: Circle()) // Same matching glass effect
+                    .background(.ultraThinMaterial, in: Circle())
                     
                 Image(systemName: isSaved ? "heart.fill" : "heart")
                     .font(.system(size: 15, weight: .medium))
                     .foregroundColor(isSaved ? .red : (hovered ? .white : Color.white.opacity(0.8)))
             }
-            .frame(width: 38, height: 38) // Slightly smaller, tightly matched, removed bouncy scale
+            .frame(width: 38, height: 38)
         }
         .buttonStyle(.plain)
         .onHover { h in withAnimation(.easeInOut(duration: 0.2)) { hovered = h } }

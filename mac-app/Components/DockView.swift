@@ -2,23 +2,20 @@ import SwiftUI
 
 struct DockView: View {
     @Binding var activeIndex: Int
-    let themes: [WallpaperTheme]
+    let wallpapers: [Wallpaper]
 
     var body: some View {
-        // Changed to use ultraThinMaterial instead of hard dark color 
-        // to match Apple UI transparency completely
         HStack(spacing: 0) {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
-                    ForEach(0..<themes.count, id: \.self) { index in
-                        ThumbnailView(theme: themes[index], isActive: index == activeIndex) {
+                    ForEach(0..<wallpapers.count, id: \.self) { index in
+                        ThumbnailView(wallpaper: wallpapers[index], isActive: index == activeIndex) {
                             withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
                                 activeIndex = index
                             }
                         }
                     }
                 }
-                // Perfectly uniform 8px padding to match Apple guidelines on all sides identically
                 .padding(.vertical, 8)
                 .padding(.horizontal, 8) 
             }
@@ -31,9 +28,8 @@ struct DockView: View {
     }
 }
 
-// Thumbnail component inside dock
 struct ThumbnailView: View {
-    let theme: WallpaperTheme
+    let wallpaper: Wallpaper
     let isActive: Bool
     let action: () -> Void
     
@@ -41,20 +37,17 @@ struct ThumbnailView: View {
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            // Background Image
-            AsyncImage(url: URL(string: theme.imageURL)) { image in
+            CachedImage(url: WallpaperStore.shared.getFullThumbURL(for: wallpaper)) { image in
                 image.resizable().aspectRatio(contentMode: .fill)
             } placeholder: {
-                Color.gray.opacity(0.2)
+                Color.white.opacity(0.05)
             }
             .opacity(isActive ? 1.0 : (hovered ? 0.8 : 0.6))
             
-            // Gradient Overlay
             LinearGradient(colors: [Color.black.opacity(0.6), .clear], startPoint: .bottom, endPoint: .center)
-
         }
         .frame(width: 96, height: 54)
-        .clipShape(RoundedRectangle(cornerRadius: 12)) // Made 12 to match 18 outer perfectly
+        .clipShape(RoundedRectangle(cornerRadius: 12)) 
         .contentShape(Rectangle())
         .onTapGesture(perform: action)
         .onHover { h in

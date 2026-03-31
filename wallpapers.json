@@ -1,0 +1,99 @@
+{
+    "version": 1,
+    "config": {
+        "base_url": "https://pub-0d300580e0414418856e4bbff1672869.r2.dev"
+    },
+    "wallpapers": [
+        {
+            "id": "nature-bali-beach",
+            "title": "Bali Beach",
+            "category": "Nature",
+            "video_path": "videos/nature/Bali Beach.mp4",
+            "thumb_path": "thumbnails/nature/Bali Beach.jpg"
+        },
+        {
+            "id": "nature-beach",
+            "title": "Beach",
+            "category": "Nature",
+            "video_path": "videos/nature/Beach.mp4",
+            "thumb_path": "thumbnails/nature/Beach.jpg"
+        },
+        {
+            "id": "nature-mount-fuji",
+            "title": "Mount Fuji",
+            "category": "Nature",
+            "video_path": "videos/nature/Mount Fuji.mp4",
+            "thumb_path": "thumbnails/nature/Mount Fuji.jpg"
+        },
+        {
+            "id": "nature-pink-sunset",
+            "title": "Pink Sunset Ocean",
+            "category": "Nature",
+            "video_path": "videos/nature/Pink Sunset Ocean.mp4",
+            "thumb_path": "thumbnails/nature/Pink Sunset Ocean.jpg"
+        },
+        {
+            "id": "nature-st-michaels",
+            "title": "Saint Michael's Mount",
+            "category": "Nature",
+            "video_path": "videos/nature/Saint Michael's Mount.mp4",
+            "thumb_path": "thumbnails/nature/Saint Michael's Mount.jpg"
+        },
+        {
+            "id": "nature-temple-autumn",
+            "title": "Temple Gate Autumn",
+            "category": "Nature",
+            "video_path": "videos/nature/Temple Gate Autumn.mp4",
+            "thumb_path": "thumbnails/nature/Temple Gate Autumn.jpg"
+        },
+        {
+            "id": "nature-winter-forest",
+            "title": "Winter Forest Snow",
+            "category": "Nature",
+            "video_path": "videos/nature/Winter Forest Snow.mp4",
+            "thumb_path": "thumbnails/nature/Winter Forest Snow.jpg"
+        },
+        {
+            "id": "aesthetic-cherry-blossom",
+            "title": "Cherry Blossom",
+            "category": "Aesthetic",
+            "video_path": "videos/aesthetic/Cherry Blossom.mp4",
+            "thumb_path": "thumbnails/aesthetic/Cherry Blossom.jpg"
+        },
+        {
+            "id": "aesthetic-fuji-torii",
+            "title": "Mount Fuji Torii",
+            "category": "Aesthetic",
+            "video_path": "videos/aesthetic/Mount Fuji Torii.mp4",
+            "thumb_path": "thumbnails/aesthetic/Mount Fuji Torii.jpg"
+        },
+        {
+            "id": "aesthetic-lake-sunset",
+            "title": "Mountain Lake Sunset",
+            "category": "Aesthetic",
+            "video_path": "videos/aesthetic/Mountain Lake Sunset.mp4",
+            "thumb_path": "thumbnails/aesthetic/Mountain Lake Sunset.jpg"
+        },
+        {
+            "id": "aesthetic-path-beach",
+            "title": "Path to the Beach",
+            "category": "Aesthetic",
+            "video_path": "videos/aesthetic/Path to the Beach.mp4",
+            "thumb_path": "thumbnails/aesthetic/Path to the Beach.jpg"
+        },
+        {
+            "id": "aesthetic-sakura-temple",
+            "title": "Sakura Japanese Temple",
+            "category": "Aesthetic",
+            "video_path": "videos/aesthetic/Sakura Japanese Temple.mp4",
+            "thumb_path": "thumbnails/aesthetic/Sakura Japanese Temple.jpg"
+        },
+        {
+            "id": "space-crescent-moon",
+            "title": "Crescent Moon",
+            "category": "Space",
+            "video_path": "videos/space/Crescent Moon.mp4",
+            "thumb_path": "thumbnails/space/Crescent Moon.jpg"
+        }
+    ]
+}
