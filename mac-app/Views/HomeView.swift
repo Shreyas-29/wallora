@@ -14,7 +14,7 @@ struct HomeView: View {
     var currentWallpapers: [Wallpaper] {
         switch selectedTab {
         case "Home": 
-            return Array(store.wallpapers.prefix(5))
+            return Array(store.wallpapers.prefix(10))
         case "Explore": 
             if exploreSearchText.isEmpty { return store.wallpapers }
             return store.wallpapers.filter { $0.title.localizedCaseInsensitiveContains(exploreSearchText) || $0.category.localizedCaseInsensitiveContains(exploreSearchText) }
@@ -40,7 +40,7 @@ struct HomeView: View {
                         VideoPreviewPlayer(videoURL: videoURL, thumbURL: thumbURL)
                             .aspectRatio(contentMode: .fill)
                             .frame(width: geo.size.width, height: geo.size.height)
-                            .opacity(0.6)
+                            .opacity(0.95)
                             .id(wp.id) 
                     }
                 }

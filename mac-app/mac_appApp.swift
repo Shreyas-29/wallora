@@ -11,7 +11,7 @@ import SwiftUI
 class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Find the main window and inject a custom thickness to push traffic lights down
-        if let window = NSApplication.shared.windows.first {
+        /* if let window = NSApplication.shared.windows.first {
             window.titlebarSeparatorStyle = .none
             window.titleVisibility = .hidden
             window.titlebarAppearsTransparent = true
@@ -21,7 +21,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let customToolbar = NSToolbar()
             customToolbar.showsBaselineSeparator = false
             window.toolbar = customToolbar
-        }
+        } */
     }
 }
 
@@ -30,14 +30,16 @@ struct mac_appApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     var body: some Scene {
-        WindowGroup {
+        /* WindowGroup {
             HomeView()
                 .preferredColorScheme(.dark)
         }
-        .windowStyle(.hiddenTitleBar)
+        .windowStyle(.hiddenTitleBar) */
 
-        MenuBarExtra("Wallora", systemImage: "sparkle") {
+        MenuBarExtra {
             ContentView()
+        } label: {
+            Image("MenuBarIcon")
         }
         .menuBarExtraStyle(.window) // Creates a popover-style menu
     }

@@ -3,16 +3,19 @@
 .AppleDouble
 .LSOverride
 
-# Xcode - User-specific
+# Xcode - User-specific (Crucial to ignore)
 xcuserdata/
 *.xcuserstate
-
-# Xcode - Build artifacts
-DerivedData/
 *.pbxuser
 *.mode1v3
 *.mode2v3
 *.perspectivev3
+
+# Xcode - Build artifacts
+DerivedData/
+*.dmg
+*.app
+*.pkg
 
 # Swift Package Manager
 .build/
@@ -21,9 +24,15 @@ DerivedData/
 # VSCode
 .vscode/
 
-# Project-specific
-mac-app/shreyas.jpg
+# AI Agent Context
+.agents/
+.gemini/
+
+# Project-specific & Scratch
+*.tmp
+shreyas.jpg
 project.md
+wallpapers.json
 mac-app/Assets.xcassets/shreyas.imageset/
 
 docs/

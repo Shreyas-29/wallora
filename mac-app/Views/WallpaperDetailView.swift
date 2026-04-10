@@ -24,7 +24,7 @@ struct WallpaperDetailView: View {
                 VideoPreviewPlayer(videoURL: videoURL, thumbURL: thumbURL)
                     .aspectRatio(contentMode: .fill)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .opacity(0.8)
+                    .opacity(1.0)
                     .ignoresSafeArea()
             }
             
